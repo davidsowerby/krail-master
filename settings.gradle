@@ -1,0 +1,30 @@
+
+
+include 'krail'
+include 'krail-jpa'
+include 'krail-demo'
+include 'krail-testApp'
+include 'krail-testUtil'
+include 'krail-quartz'
+include 'krail-bench'
+include 'q3c-testUtil'
+
+rootProject.name = 'krail-master'
+
+rootProject.children.each { project ->
+
+    String fileBaseName = project.name
+    String projectDirName = '../' + fileBaseName
+    project.projectDir = new File(projectDirName)
+
+// for example, makes it krail.gradle
+    project.buildFileName = "${fileBaseName}.gradle"
+
+//make sure it exists
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}
+
+
+
+

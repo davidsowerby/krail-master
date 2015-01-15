@@ -1,0 +1,307 @@
+// TODO assertDevelopBranch
+// TODO catch other errors (some have been deleted in re-work)
+// TODO commitDevelopBranch
+// TODO mergeToMaster
+// TODO Quartz has compile dependency on q3c-testUtil?
+
+//master build needs to load properties
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'com.admc:gradle-javaPropFile-plugin:1.0.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'org.ajoberstar:gradle-git:0.12.0'
+        classpath 'commons-io:commons-io:2.4'
+        classpath 'q3c:gradle-q3c:1.0'
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.admc.javaPropFile'
+
+description = 'Master build project for Krail and Krail libraries'
+
+allprojects {
+
+
+    if (project.name.equals('krail-testApp') || project.name.equals('krail-demo') || project.name.equals('release-manager')) {
+        ext.webapp = true
+    } else {
+        ext.webapp = false
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'project-report'
+    apply plugin: 'eclipse-wtp'
+    apply plugin: 'idea'
+    apply plugin: 'test-plugin'
+
+    sourceCompatibility = '1.8'
+
+    ext.assertjVersion = '1.5.0'
+    ext.guiceVersion = '3.0'
+    ext.vaadinVersion = '7.3.7'
+    ext.versionDescription = 'No version description provided'
+    ext.bintrayDryRun = true
+    ext.releaseDate=new Date()
+
+
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'http://maven.vaadin.com/vaadin-addons'
+        }
+    }
+
+
+    if (project.name == 'q3-util') {
+        group = 'uk.q3c'
+    } else {
+        group = 'uk.q3c.krail'
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    javadoc {
+        failOnError = false
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    task testPreparation << {
+        description = 'preparing test environment for ' + project.name
+    }
+
+
+
+
+
+    dependencies {
+        //Dependency Injection
+        compile 'com.google.inject:guice:' + guiceVersion
+
+        if (!project.name.equals('q3-util') && !project.name.equals('krail')) {
+            compile project(':krail')
+        }
+
+        //Logging
+        compile 'org.slf4j:slf4j-api:1.6.6'
+        compile 'org.slf4j:slf4j-log4j12:1.6.6'
+
+        //Utility
+        compile 'com.google.guava:guava:13.0.1'
+
+        //Testing
+        testCompile 'com.mycila:mycila-guice:2.10.ga'
+        testCompile 'com.mycila.testing.plugins:mycila-testing-guice:2.8'
+        testCompile 'com.mycila.testing.plugins:mycila-testing-mockito:2.8'
+        testCompile 'org.mockito:mockito-all:1.9.0'
+        testCompile 'junit:junit:4.11'
+        testCompile 'org.assertj:assertj-core:' + assertjVersion
+        testCompile 'org.assertj:assertj-guava:1.0.0'
+    }
+
+}
+
+//only subprojects need bintray and maven publishing
+subprojects {
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        }
+    }
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+
+
+    bintray {
+        user = 'dsowerby'
+        key = bintrayKey
+
+        publications = ['mavenStuff'] //When uploading Maven-based publication files
+        dryRun = project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
+        publish = true //If version should be auto published after an upload
+        pkg {
+            repo = 'maven'
+//        userOrg = 'myorg' //An optional organization name when the repo belongs to one of the user's orgs
+            name = project.name
+            desc = project.description
+            websiteUrl = 'https://github.com/davidsowerby/' + project.name
+            issueTrackerUrl = websiteUrl + '/issues'
+            vcsUrl = websiteUrl + '.git'
+            licenses = ['Apache-2.0']
+            labels = ['vaadin', 'guice']
+            publicDownloadNumbers = true
+            //Optional version descriptor
+            version {
+                name = project.version
+                desc = project.ext.versionDescription
+                released = project.ext.releaseDate
+                //'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
+                mavenCentralSync {
+                    sync = false //Optional (true by default). Determines whether to sync the version to Maven Central.
+                }
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenStuff(MavenPublication) {
+                from components.java
+
+                artifact sourcesJar {
+                    classifier "sources"
+                }
+
+                artifact javadocJar {
+                    classifier "javadoc"
+                }
+            }
+        }
+    }
+
+    task describeVersion << {
+        println project.name + "  " + project.version + "  " + project.versionDescription
+    }
+
+    task describe << {
+        println project.name + "  " + project.description
+    }
+
+    //webapp stuff
+
+    if (webapp) {
+        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.9.2'
+        apply plugin: 'war'
+
+        ext.userHome = System.getProperty("user.home")
+        ext.tomcatHome = userHome + "/tomcat7_8080"
+
+        ext.warName = project.name.toLowerCase() + '.war'
+
+
+        war {
+            exclude 'WEB-INF/lib/*'
+            archiveName = warName
+            destinationDir file(userHome + "/temp")
+        }
+
+
+        vaadin {
+            version vaadinVersion
+            manageWidgetset true
+            serverPort 8001
+        }
+
+        task stopTomcat(type: Exec) {
+
+            //on linux
+            commandLine userHome + '/stop7_8080.sh'
+
+        }
+
+        task startTomcat(type: Exec) {
+
+            commandLine userHome + '/start7_8080.sh'
+
+        }
+
+
+        task deployToTomcat(type: Copy) {
+            it.dependsOn("war")
+            from war
+            into "${tomcatHome}/webapps"
+        }
+
+
+
+        task waitForTomcat(dependsOn: startTomcat) {
+            doFirst {
+                println "giving Tomcat time to start"
+                sleep(20 * 1000)
+                println "sleep over"
+            }
+        }
+
+
+        task cleanTomcat(type: Delete, dependsOn: stopTomcat) {
+            delete tomcatHome + '/webapps/' + warName, tomcatHome + '/webapps/' + project.name
+        }
+
+
+        deployToTomcat.mustRunAfter(stopTomcat)
+        deployToTomcat.mustRunAfter(cleanTomcat)
+        test.mustRunAfter(waitForTomcat)
+
+
+        task cleanTest(dependsOn: ['clean', 'war', 'stopTomcat', 'cleanTomcat', 'deployToTomcat', 'startTomcat', 'waitForTomcat', 'testPreparation', 'test']) {
+
+        }
+
+        war.mustRunAfter(clean)
+        stopTomcat.mustRunAfter(war)
+        cleanTomcat.mustRunAfter(stopTomcat)
+        testPreparation.mustRunAfter(cleanTomcat)
+        deployToTomcat.mustRunAfter(testPreparation)
+        startTomcat.mustRunAfter(deployToTomcat)
+        waitForTomcat.mustRunAfter(startTomcat)
+        test.mustRunAfter(waitForTomcat)
+
+        dependencies {
+
+            testCompile project(':krail-bench')
+            testCompile 'com.vaadin:vaadin-testbench:4.0.1'
+        }
+
+    } else {
+        //Not a webapp
+        task cleanTest(dependsOn: ['clean', 'testPreparation', 'test']) {
+
+        }
+    }
+
+}
+
+task preRelease << {
+    subprojects {
+        println 'Pre-Release test for ' + project.name
+        tasks.cleanTest
+    }
+}
+
+task verify(type: uk.q3c.gradle.ReleaseTask) {
+}
+
+
+dependencies {
+    compile project(':krail-testUtil')
+    compile project(':q3c-testUtil')
+}
