@@ -1,0 +1,1 @@
+This version moves most of the build into this project, when it was previously distributed with a build.gradle for each project

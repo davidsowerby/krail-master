@@ -1,10 +1,8 @@
 // TODO assertDevelopBranch
-// TODO catch other errors (some have been deleted in re-work)
 // TODO commitDevelopBranch
 // TODO mergeToMaster
 // TODO Quartz has compile dependency on q3c-testUtil?
 
-//master build needs to load properties
 buildscript {
     repositories {
         jcenter()
@@ -12,33 +10,26 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.admc:gradle-javaPropFile-plugin:1.0.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
         classpath 'org.ajoberstar:gradle-git:0.12.0'
         classpath 'commons-io:commons-io:2.4'
-        classpath 'q3c:gradle-q3c:1.0'
+        classpath 'uk.q3c:q3c-gradle:0.5.1'
     }
 }
 
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.admc.javaPropFile'
 
 description = 'Master build project for Krail and Krail libraries'
 
 allprojects {
 
-
-    if (project.name.equals('krail-testApp') || project.name.equals('krail-demo') || project.name.equals('release-manager')) {
-        ext.webapp = true
-    } else {
-        ext.webapp = false
-    }
-
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'java'
     apply plugin: 'project-report'
     apply plugin: 'eclipse-wtp'
     apply plugin: 'idea'
-    apply plugin: 'test-plugin'
+    apply plugin: 'q3c-release'
 
     sourceCompatibility = '1.8'
 
@@ -49,6 +40,11 @@ allprojects {
     ext.bintrayDryRun = true
     ext.releaseDate=new Date()
 
+    if (project.name.equals('krail-testApp') || project.name.equals('krail-demo') ) {
+        ext.webapp = true
+    } else {
+        ext.webapp = false
+    }
 
     repositories {
         jcenter()
@@ -58,95 +54,12 @@ allprojects {
         }
     }
 
-
-    if (project.name == 'q3-util') {
-        group = 'uk.q3c'
-    } else {
-        group = 'uk.q3c.krail'
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
-
-    javadoc {
-        failOnError = false
-    }
-
-    idea {
-        module {
-            downloadJavadoc = true
-            downloadSources = true
-        }
-    }
-
-    task testPreparation << {
-        description = 'preparing test environment for ' + project.name
-    }
-
-
-
-
-
-    dependencies {
-        //Dependency Injection
-        compile 'com.google.inject:guice:' + guiceVersion
-
-        if (!project.name.equals('q3-util') && !project.name.equals('krail')) {
-            compile project(':krail')
-        }
-
-        //Logging
-        compile 'org.slf4j:slf4j-api:1.6.6'
-        compile 'org.slf4j:slf4j-log4j12:1.6.6'
-
-        //Utility
-        compile 'com.google.guava:guava:13.0.1'
-
-        //Testing
-        testCompile 'com.mycila:mycila-guice:2.10.ga'
-        testCompile 'com.mycila.testing.plugins:mycila-testing-guice:2.8'
-        testCompile 'com.mycila.testing.plugins:mycila-testing-mockito:2.8'
-        testCompile 'org.mockito:mockito-all:1.9.0'
-        testCompile 'junit:junit:4.11'
-        testCompile 'org.assertj:assertj-core:' + assertjVersion
-        testCompile 'org.assertj:assertj-guava:1.0.0'
-    }
-
-}
-
-//only subprojects need bintray and maven publishing
-subprojects {
-    buildscript {
-        repositories {
-            jcenter()
-        }
-        dependencies {
-            classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
-        }
-    }
-    apply plugin: 'com.jfrog.bintray'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-
-
     bintray {
         user = 'dsowerby'
         key = bintrayKey
 
         publications = ['mavenStuff'] //When uploading Maven-based publication files
-        dryRun = project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
+        dryRun = true//project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
         publish = true //If version should be auto published after an upload
         pkg {
             repo = 'maven'
@@ -161,7 +74,7 @@ subprojects {
             publicDownloadNumbers = true
             //Optional version descriptor
             version {
-                name = project.version
+                name = versionFromFile(project.projectDir)
                 desc = project.ext.versionDescription
                 released = project.ext.releaseDate
                 //'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
@@ -171,6 +84,8 @@ subprojects {
             }
         }
     }
+
+
 
     publishing {
         publications {
@@ -188,12 +103,23 @@ subprojects {
         }
     }
 
-    task describeVersion << {
-        println project.name + "  " + project.version + "  " + project.versionDescription
+
+    task testPreparation << {
+
     }
 
-    task describe << {
-        println project.name + "  " + project.description
+    task cleanTest(dependsOn: ['testPreparation', 'test']) {
+
+    }
+
+    testPreparation.dependsOn(clean)
+    testPreparation.mustRunAfter(clean)
+    cleanTest.mustRunAfter(testPreparation)
+    test.mustRunAfter(testPreparation)
+
+
+    task fixup(type: uk.q3c.gradle.FixupTask) {
+
     }
 
     //webapp stuff
@@ -205,7 +131,7 @@ subprojects {
         ext.userHome = System.getProperty("user.home")
         ext.tomcatHome = userHome + "/tomcat7_8080"
 
-        ext.warName = project.name.toLowerCase() + '.war'
+        ext.warName = (project.name.toLowerCase() + '.war')
 
 
         war {
@@ -252,28 +178,31 @@ subprojects {
         }
 
 
+
+
         task cleanTomcat(type: Delete, dependsOn: stopTomcat) {
             delete tomcatHome + '/webapps/' + warName, tomcatHome + '/webapps/' + project.name
         }
 
-
-        deployToTomcat.mustRunAfter(stopTomcat)
-        deployToTomcat.mustRunAfter(cleanTomcat)
-        test.mustRunAfter(waitForTomcat)
-
-
-        task cleanTest(dependsOn: ['clean', 'war', 'stopTomcat', 'cleanTomcat', 'deployToTomcat', 'startTomcat', 'waitForTomcat', 'testPreparation', 'test']) {
+        testPreparation.doFirst {
 
         }
 
-        war.mustRunAfter(clean)
-        stopTomcat.mustRunAfter(war)
-        cleanTomcat.mustRunAfter(stopTomcat)
-        testPreparation.mustRunAfter(cleanTomcat)
-        deployToTomcat.mustRunAfter(testPreparation)
-        startTomcat.mustRunAfter(deployToTomcat)
+        testPreparation.dependsOn(waitForTomcat)
+        testPreparation.mustRunAfter(waitForTomcat)
+        waitForTomcat.dependsOn(startTomcat)
         waitForTomcat.mustRunAfter(startTomcat)
-        test.mustRunAfter(waitForTomcat)
+
+        startTomcat.dependsOn(deployToTomcat)
+        startTomcat.mustRunAfter(deployToTomcat)
+
+        deployToTomcat.dependsOn(stopTomcat)
+        deployToTomcat.mustRunAfter(stopTomcat)
+
+        stopTomcat.dependsOn(war)
+        stopTomcat.mustRunAfter(war)
+
+
 
         dependencies {
 
@@ -282,26 +211,101 @@ subprojects {
         }
 
     } else {
-        //Not a webapp
-        task cleanTest(dependsOn: ['clean', 'testPreparation', 'test']) {
 
+        testPreparation.doFirst {
+            println('Test preparation for non-webapp')
+        }
+
+
+    }
+
+    if (project.name == 'q3-util') {
+        group = 'uk.q3c'
+    } else {
+        group = 'uk.q3c.krail'
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    javadoc {
+        failOnError = false
+    }
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
         }
     }
 
-}
 
-task preRelease << {
-    subprojects {
-        println 'Pre-Release test for ' + project.name
-        tasks.cleanTest
+
+    dependencies {
+        //Dependency Injection
+        compile 'com.google.inject:guice:' + guiceVersion
+
+        if (!project.name.equals('q3-util') && !project.name.equals('krail')) {
+            compile project(':krail')
+        }
+
+        //Logging
+        compile 'org.slf4j:slf4j-api:1.6.6'
+        compile 'org.slf4j:slf4j-log4j12:1.6.6'
+
+        //Utility
+        compile 'com.google.guava:guava:13.0.1'
+
+        //Testing
+        testCompile 'com.mycila:mycila-guice:2.10.ga'
+        testCompile 'com.mycila.testing.plugins:mycila-testing-guice:2.8'
+        testCompile 'com.mycila.testing.plugins:mycila-testing-mockito:2.8'
+        testCompile 'org.mockito:mockito-all:1.9.0'
+        testCompile 'junit:junit:4.11'
+        testCompile 'org.assertj:assertj-core:' + assertjVersion
+        testCompile 'org.assertj:assertj-guava:1.0.0'
     }
-}
 
-task verify(type: uk.q3c.gradle.ReleaseTask) {
 }
-
 
 dependencies {
     compile project(':krail-testUtil')
     compile project(':q3c-testUtil')
 }
+
+
+task verifyRelease(type: uk.q3c.gradle.VerificationTask) {
+
+}
+
+task prepareRelease(type: uk.q3c.gradle.PrepareReleaseTask) {
+
+}
+
+task release(type: uk.q3c.gradle.ReleaseTask) {
+
+}
+
+def versionFromFile(File projectRoot) {
+    def Properties props = new Properties()
+    def propFile = new File(projectRoot, 'version.properties')
+    if (propFile.canRead()) {
+        props.load(new FileInputStream(propFile))
+    }
+    String key = uk.q3c.gradle.ProjectRecord.PropKey.CURRENT_VERSION
+    println(projectRoot.getName() + ": version is " + props[key])
+    props[key]
+}
+
