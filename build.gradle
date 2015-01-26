@@ -284,7 +284,6 @@ dependencies {
     compile project(':q3c-testUtil')
 }
 
-
 task verifyRelease(type: uk.q3c.gradle.VerificationTask) {
 
 }
@@ -303,7 +302,8 @@ def versionFromFile(File projectRoot) {
     if (propFile.canRead()) {
         props.load(new FileInputStream(propFile))
     }
-    String key = uk.q3c.gradle.ProjectRecord.PropKey.CURRENT_VERSION
+//    String key = uk.q3c.gradle.ProjectRecord.PropKey.CURRENT_VERSION
+    String key = "CURRENT_VERSION"
     println(projectRoot.getName() + ": version is " + props[key])
     props[key]
 }
