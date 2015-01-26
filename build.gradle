@@ -117,10 +117,9 @@ allprojects {
     cleanTest.mustRunAfter(testPreparation)
     test.mustRunAfter(testPreparation)
 
-
-    task fixup(type: uk.q3c.gradle.FixupTask) {
-
-    }
+//    task fixup(type: uk.q3c.gradle.FixupTask) {
+//
+//    }
 
     //webapp stuff
 
