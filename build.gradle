@@ -16,6 +16,7 @@ buildscript {
 
 description = 'Master build project for Krail and Krail libraries'
 
+
 allprojects {
 
     apply plugin: 'com.jfrog.bintray'
@@ -35,6 +36,9 @@ allprojects {
     ext.versionDescription = 'No version description provided'
     ext.bintrayDryRun = true
     ext.releaseDate=new Date()
+
+    //lookup version from the file produced by the release process
+    version = versionFromFile(project.projectDir)
 
     if (project.name.equals('krail-testApp') || project.name.equals('krail-demo') ) {
         ext.webapp = true
@@ -70,7 +74,7 @@ allprojects {
             publicDownloadNumbers = true
             //Optional version descriptor
             version {
-                name = versionFromFile(project.projectDir)
+                name = project.version
                 desc = project.ext.versionDescription
                 released = project.ext.releaseDate
                 //'optional, date of the version release' //2 possible values: date in the format of 'yyyy-MM-dd'T'HH:mm:ss.SSSZZ' OR a java.util.Date instance
@@ -80,6 +84,7 @@ allprojects {
             }
         }
     }
+
 
 
 
@@ -98,6 +103,7 @@ allprojects {
             }
         }
     }
+
 
 
     task testPreparation << {
