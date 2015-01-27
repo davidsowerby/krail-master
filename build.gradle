@@ -1,7 +1,3 @@
-// TODO assertDevelopBranch
-// TODO commitDevelopBranch
-// TODO mergeToMaster
-// TODO Quartz has compile dependency on q3c-testUtil?
 
 buildscript {
     repositories {
@@ -59,7 +55,7 @@ allprojects {
         key = bintrayKey
 
         publications = ['mavenStuff'] //When uploading Maven-based publication files
-        dryRun = true//project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
+        dryRun = false  //project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
         publish = true //If version should be auto published after an upload
         pkg {
             repo = 'maven'
@@ -117,9 +113,6 @@ allprojects {
     cleanTest.mustRunAfter(testPreparation)
     test.mustRunAfter(testPreparation)
 
-//    task fixup(type: uk.q3c.gradle.FixupTask) {
-//
-//    }
 
     //webapp stuff
 
@@ -302,7 +295,6 @@ def versionFromFile(File projectRoot) {
     if (propFile.canRead()) {
         props.load(new FileInputStream(propFile))
     }
-//    String key = uk.q3c.gradle.ProjectRecord.PropKey.CURRENT_VERSION
     String key = "CURRENT_VERSION"
     println(projectRoot.getName() + ": version is " + props[key])
     props[key]
