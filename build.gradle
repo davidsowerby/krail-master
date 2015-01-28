@@ -122,7 +122,7 @@ allprojects {
     //webapp stuff
 
     if (webapp) {
-        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.9.2'
+        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.9.6'
         apply plugin: 'war'
 
         ext.userHome = System.getProperty("user.home")
@@ -169,7 +169,7 @@ allprojects {
         task waitForTomcat(dependsOn: startTomcat) {
             doFirst {
                 println "giving Tomcat time to start"
-                sleep(20 * 1000)
+                sleep(5 * 1000)
                 println "sleep over"
             }
         }
