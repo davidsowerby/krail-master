@@ -104,20 +104,19 @@ allprojects {
         }
     }
 
-
-
-    task testPreparation << {
-
-    }
-
-    task cleanTest(dependsOn: ['testPreparation', 'test']) {
+//Test preparation, but shortened to make it easier on the command line
+    task testPrep << {
 
     }
 
-    testPreparation.dependsOn(clean)
-    testPreparation.mustRunAfter(clean)
-    cleanTest.mustRunAfter(testPreparation)
-    test.mustRunAfter(testPreparation)
+    task cleanTest(dependsOn: ['testPrep', 'test']) {
+
+    }
+
+    testPrep.dependsOn(clean)
+    testPrep.mustRunAfter(clean)
+    cleanTest.mustRunAfter(testPrep)
+    test.mustRunAfter(testPrep)
 
 
     //webapp stuff
@@ -182,12 +181,12 @@ allprojects {
             delete tomcatHome + '/webapps/' + warName, tomcatHome + '/webapps/' + project.name
         }
 
-        testPreparation.doFirst {
+        testPrep.doFirst {
 
         }
 
-        testPreparation.dependsOn(waitForTomcat)
-        testPreparation.mustRunAfter(waitForTomcat)
+        testPrep.dependsOn(waitForTomcat)
+        testPrep.mustRunAfter(waitForTomcat)
         waitForTomcat.dependsOn(startTomcat)
         waitForTomcat.mustRunAfter(startTomcat)
 
@@ -210,7 +209,7 @@ allprojects {
 
     } else {
 
-        testPreparation.doFirst {
+        testPrep.doFirst {
             println('Test preparation for non-webapp')
         }
 
