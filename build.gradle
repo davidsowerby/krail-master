@@ -216,11 +216,9 @@ allprojects {
 
     }
 
-    if (project.name == 'q3-util') {
-        group = 'uk.q3c'
-    } else {
-        group = 'uk.q3c.krail'
-    }
+
+    group = 'uk.q3c.krail'
+
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
