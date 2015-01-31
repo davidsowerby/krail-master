@@ -18,6 +18,9 @@ This version uses a later version of q3c-gradle to better support README generat
 
 #### Detail
 
+Release notes and version.properties generated
+
+---
 *Set version information*
 
 
