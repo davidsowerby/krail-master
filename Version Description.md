@@ -1,1 +1,1 @@
-This version moves most of the build into this project, when it was previously distributed with a build.gradle for each project
+This version uses a later version of q3c-gradle to better support README generation, and removes the IDEA project files from Git
