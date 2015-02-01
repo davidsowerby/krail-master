@@ -37,7 +37,7 @@ allprojects {
     ext.bintrayDryRun = true
     ext.releaseDate=new Date()
 
-    bintrayUpload.enabled = false
+//    bintrayUpload.enabled = false
 
     //lookup version from the file produced by the release process
     version = versionFromFile(project.projectDir)
