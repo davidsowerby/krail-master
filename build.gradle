@@ -251,6 +251,10 @@ allprojects {
 
 
     dependencies {
+
+        //code analysis
+        compile 'com.google.code.findbugs:annotations:3.0.0'
+
         //Dependency Injection
         compile 'com.google.inject:guice:' + guiceVersion
 
