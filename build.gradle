@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2015. David Sowerby
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+
+import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
     repositories {
@@ -35,14 +47,14 @@ allprojects {
     ext.vaadinVersion = '7.3.9'
     ext.versionDescription = 'No version description provided'
     ext.bintrayDryRun = true
-    ext.releaseDate=new Date()
+    ext.releaseDate = new Date()
 
 //    bintrayUpload.enabled = false
 
     //lookup version from the file produced by the release process
     version = versionFromFile(project.projectDir)
 
-    if (project.name.equals('krail-testApp') || project.name.equals('krail-demo') ) {
+    if (project.name.equals('krail-testApp') || project.name.equals('krail-demo')) {
         ext.webapp = true
     } else {
         ext.webapp = false
@@ -111,15 +123,10 @@ allprojects {
 
     }
 
-    task cleanTest(dependsOn: ['testPrep', 'test']) {
-
-    }
 
     testPrep.dependsOn(clean)
     testPrep.mustRunAfter(clean)
-    cleanTest.mustRunAfter(testPrep)
     test.mustRunAfter(testPrep)
-
 
     //webapp stuff
 
@@ -148,14 +155,30 @@ allprojects {
 
         task stopTomcat(type: Exec) {
 
-            //on linux
-            commandLine userHome + '/stop7_8080.sh'
+
+            if (Os.isFamily(Os.FAMILY_UNIX)) {
+                commandLine 'stopTomcat7'
+            } else {
+
+                if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    commandLine 'cmd', 'stopTomcat7'
+
+                }
+            }
 
         }
 
         task startTomcat(type: Exec) {
 
-            commandLine userHome + '/start7_8080.sh'
+            if (Os.isFamily(Os.FAMILY_UNIX)) {
+                commandLine 'startTomcat7'
+            } else {
+
+                if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    commandLine 'cmd', 'startTomcat7'
+
+                }
+            }
 
         }
 
