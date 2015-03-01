@@ -44,7 +44,7 @@ allprojects {
 
     ext.assertjVersion = '1.5.0'
     ext.guiceVersion = '3.0'
-    ext.vaadinVersion = '7.3.10'
+    ext.vaadinVersion = '7.4.0'
     ext.versionDescription = 'No version description provided'
     ext.bintrayDryRun = true
     ext.releaseDate = new Date()

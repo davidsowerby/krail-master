@@ -1,1 +1,1 @@
-This version uses a later version of q3c-gradle to better support README generation, and removes the IDEA project files from Git
+This version updates to Vaadin 7.4.0
