@@ -1,46 +1,35 @@
-### Release Notes for krail-master 0.5.2
+### Release Notes for krail-master 0.5.3
 
-This version uses a later version of q3c-gradle to better support README generation, and removes the IDEA project files from Git
+This version updates to Vaadin 7.4.0, and updates a couple of other dependencies
 
 #### Change log
 
--   [9](https://github.com/davidsowerby/krail-master/issues/9): Add findBugs annotations to build
--   [10](https://github.com/davidsowerby/krail-master/issues/10): Run on Windows or Linux
+-   [14](https://github.com/davidsowerby/krail-master/issues/14): Update versions Guava and assertj
 
 
 #### Dependency changes
 
-   compile dependency version changed to: krail:0.8.0
-   compile dependency version changed to: krail-testUtil:1.0.7
-   compile dependency version changed to: q3c-testUtil:0.7.4
+   compile dependency version changed to: krail:0.8.1
+   compile dependency version changed to: krail-testUtil:1.0.8
+   compile dependency version changed to: q3c-testUtil:0.7.5
 
 #### Detail
 
-*Fix [10](https://github.com/davidsowerby/krail-master/issues/10) Detects OS and calls appropriate command line*
-
-startTomcat and stopTomcat are OS aware.  Requires that target environments have the commands set up.
+*Updated version information*
 
 
 ---
-*Update version information*
+*Fix [14](https://github.com/davidsowerby/krail-master/issues/14) Dependency versions updated*
+
+assertjVersion = '1.7.1'    compile 'com.google.guava:guava:18.0'
 
 
 ---
-*Fix [9](https://github.com/davidsowerby/krail-master/issues/9) Added javax annotations to the build for code checking*
+[krail 333](https://github.com/*davidsowerby/krail/issues/333) Upgrade to Vaadin 7.4.0*
 
 
 ---
-*gitattributes added*
-
-To overcome Linux/Windows line ending issues
-
-
----
-*Enable bintrayUpload*
-
-
----
-*disable bintrayUpload*
+[krail 329](https://github.com/*davidsowerby/krail/issues/329) Upgrade to Vaadin 7.3.10*
 
 
 ---
