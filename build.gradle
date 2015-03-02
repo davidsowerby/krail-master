@@ -45,6 +45,10 @@ allprojects {
 //    ext.guiceVersion = '4.0-beta5'
     ext.guiceVersion = '3.0'
     ext.vaadinVersion = '7.4.0'
+    ext.slf4jVersion = '1.7.0'
+    ext.guavaVersion = '18.0'
+    ext.vaadinTestbenchVersion = '4.0.1'
+    ext.commonsLangVersion = '3.3.2'
 
     ext.versionDescription = 'No version description provided'
     ext.bintrayDryRun = true
@@ -230,7 +234,7 @@ allprojects {
         dependencies {
 
             testCompile project(':krail-bench')
-            testCompile 'com.vaadin:vaadin-testbench:4.0.1'
+            testCompile 'com.vaadin:vaadin-testbench:' + vaadinTestbenchVersion
         }
 
     } else {
@@ -272,6 +276,152 @@ allprojects {
         }
     }
 
+    configurations.all {
+        resolutionStrategy {
+            // fail eagerly on version conflict (includes transitive dependencies)
+            // e.g. multiple different versions of the same dependency (group and name are equal)
+            failOnVersionConflict()
+
+            // force certain versions of dependencies (including transitive)
+            //  *append new forced modules:
+//            force 'org.slf4j:slf4j-api:1.6.6', 'org.slf4j:sl4j-api:1.7.6'
+            //  *replace existing forced modules with new ones:
+//            forcedModules = ['asm:asm-all:3.3.1']
+
+            // add a dependency resolve rule
+            eachDependency { DependencyResolveDetails details ->
+                //specifying a fixed version for all libraries with 'org.gradle' group
+                if (details.requested.group == 'org.slf4j') {
+                    if (details.requested.name == 'slf4j-api') {
+                        details.useVersion slf4jVersion
+                    }
+                }
+                if (details.requested.group == 'com.google.guava') {
+                    if (details.requested.name == 'guava') {
+                        details.useVersion guavaVersion
+                    }
+                }
+                if (details.requested.group == 'com.mycila') {
+                    if (details.requested.name == 'mycila-log') {
+                        details.useVersion '2.12'
+                    }
+                }
+                if (details.requested.group == 'org.javassist') {
+                    if (details.requested.name == 'javassist') {
+                        details.useVersion '3.18.1-GA'
+                    }
+                }
+                if (details.requested.group == 'com.vaadin') {
+                    if (details.requested.name == 'vaadin-testbench-core') {
+                        details.useVersion vaadinTestbenchVersion
+                    }
+                }
+
+                if (details.requested.group == 'com.vaadin') {
+                    if (details.requested.name == 'vaadin-server') {
+                        details.useVersion vaadinVersion
+                    }
+                }
+
+                if (details.requested.group == 'org.seleniumhq.selenium') {
+                    if (details.requested.name == 'selenium-java') {
+                        details.useVersion '2.43.1'
+                    }
+                    if (details.requested.name == 'selenium-remote-driver') {
+                        details.useVersion '2.43.1'
+                    }
+                }
+
+                if (details.requested.group == 'cglib') {
+                    if (details.requested.name == 'cglib-nodep') {
+                        details.useVersion '2.2.2'
+                    }
+                }
+
+                if (details.requested.group == 'commons-logging') {
+                    if (details.requested.name == 'commons-logging') {
+                        details.useVersion '1.1.3'
+                    }
+                }
+
+                if (details.requested.group == 'commons-codec') {
+                    if (details.requested.name == 'commons-codec') {
+                        details.useVersion '1.9'
+                    }
+                }
+
+                if (details.requested.group == 'org.objenesis') {
+                    if (details.requested.name == 'objenesis') {
+                        details.useVersion '1.2'
+                    }
+                }
+
+                if (details.requested.group == 'org.apache.commons') {
+                    if (details.requested.name == 'commons-lang3') {
+                        details.useVersion commonsLangVersion
+                    }
+                }
+
+                if (details.requested.group == 'org.apache.httpcomponents') {
+                    if (details.requested.name == 'httpclient') {
+                        details.useVersion '4.3.4'
+                    }
+                    if (details.requested.name == 'httpcore') {
+                        details.useVersion '4.3.2'
+                    }
+                }
+
+                if (details.requested.group == 'xml-apis') {
+                    if (details.requested.name == 'xml-apis') {
+                        details.useVersion '1.4.01'
+                    }
+                }
+
+                if (details.requested.group == 'org.json') {
+                    if (details.requested.name == 'json') {
+                        details.useVersion '20141113'
+                    }
+                }
+
+                if (details.requested.group == 'org.ow2.asm') {
+                    if (details.requested.name == 'asm') {
+                        details.useVersion '5.0.2'
+                    }
+                    if (details.requested.name == 'asm-commons') {
+                        details.useVersion '5.0.2'
+                    }
+                    if (details.requested.name == 'asm-tree') {
+                        details.useVersion '5.0.3'
+                    }
+                }
+
+                if (details.requested.group == 'xerces') {
+                    if (details.requested.name == 'xerces') {
+                        details.useVersion '2.11.0'
+                    }
+                    if (details.requested.name == 'xercesImpl') {
+                        details.useVersion '2.11.0'
+                    }
+                }
+
+                if (details.requested.group == 'org.codehaus.groovy') {
+                    if (details.requested.name == 'groovy-all') {
+                        details.useVersion '2.4.1'
+                    }
+                }
+
+//                //changing 'groovy-all' into 'groovy':
+//                if (details.requested.name == 'groovy-all') {
+//                    details.useTarget group: details.requested.group, name: 'groovy', version: details.requested.version
+//                }
+            }
+//
+//            // cache dynamic versions for 10 minutes
+//            cacheDynamicVersionsFor 10*60, 'seconds'
+//            // don't cache changing modules at all
+//            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
 
 
     dependencies {
@@ -287,13 +437,13 @@ allprojects {
         }
 
         //Logging
-        compile 'org.slf4j:slf4j-api:1.6.6'
+        compile 'org.slf4j:slf4j-api:' + slf4jVersion
         compile 'ch.qos.logback:logback-classic:1.1.2'
         compile 'ch.qos.logback:logback-core:1.1.2'
         compile 'org.codehaus.groovy:groovy-all:2.4.1'
 
         //Utility
-        compile 'com.google.guava:guava:18.0'
+        compile 'com.google.guava:guava:' + guavaVersion
 
         //Testing
         testCompile 'com.mycila:mycila-guice:2.10.ga'
