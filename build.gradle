@@ -135,7 +135,7 @@ allprojects {
     //webapp stuff
 
     if (webapp) {
-        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.9.6'
+        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.9.7'
         apply plugin: 'war'
 
         ext.userHome = System.getProperty("user.home")
@@ -343,6 +343,12 @@ allprojects {
                     }
                 }
 
+                if (details.requested.group == 'commons-lang') {
+                    if (details.requested.name == 'commons-lang') {
+                        details.useVersion '2.4'
+                    }
+                }
+
                 if (details.requested.group == 'commons-codec') {
                     if (details.requested.name == 'commons-codec') {
                         details.useVersion '1.9'
@@ -407,6 +413,10 @@ allprojects {
                     if (details.requested.name == 'groovy-all') {
                         details.useVersion '2.4.1'
                     }
+                }
+
+                if (details.requested.group == 'com.jcabi') {
+                    details.useVersion '0.20.1'
                 }
 
 //                //changing 'groovy-all' into 'groovy':
