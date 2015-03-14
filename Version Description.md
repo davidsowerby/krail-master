@@ -1,1 +1,1 @@
-This version updates to Vaadin 7.4.0, and updates a couple of other dependencies
+All version conflicts in the build are resolved, some other dependency versions updated
