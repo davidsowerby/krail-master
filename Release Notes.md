@@ -1,17 +1,20 @@
-### Release Notes for krail-master 0.5.3
+### Release Notes for krail-master 0.5.4
 
-This version updates to Vaadin 7.4.0, and updates a couple of other dependencies
+All version conflicts in the build are resolved, some other dependency versions updated
 
 #### Change log
 
--   [14](https://github.com/davidsowerby/krail-master/issues/14): Update versions Guava and assertj
+-   [12](https://github.com/davidsowerby/krail-master/issues/12): Remove classpath 'org.ajoberstar:gradle-git:0.12.0' from build.gradle
+-   [13](https://github.com/davidsowerby/krail-master/issues/13): upgrade to vaadin plugin 0.9.7
+-   [15](https://github.com/davidsowerby/krail-master/issues/15): resolve dependency version conflicts
+-   [16](https://github.com/davidsowerby/krail-master/issues/16): Use neater syntax for version conflict resolution 
 
 
 #### Dependency changes
 
-   compile dependency version changed to: krail:0.8.1
-   compile dependency version changed to: krail-testUtil:1.0.8
-   compile dependency version changed to: q3c-testUtil:0.7.5
+   compile dependency version changed to: krail:0.9.0
+   compile dependency version changed to: krail-testUtil:1.0.9
+   compile dependency version changed to: q3c-testUtil:0.7.6
 
 #### Detail
 
@@ -19,17 +22,31 @@ This version updates to Vaadin 7.4.0, and updates a couple of other dependencies
 
 
 ---
-*Fix [14](https://github.com/davidsowerby/krail-master/issues/14) Dependency versions updated*
+*Fix [16](https://github.com/davidsowerby/krail-master/issues/16) Tidies version conflict resolutions*
 
-assertjVersion = '1.7.1'    compile 'com.google.guava:guava:18.0'
-
-
----
-[krail 333](https://github.com/*davidsowerby/krail/issues/333) Upgrade to Vaadin 7.4.0*
+No changes, just using the more concise 'force' syntax
 
 
 ---
-[krail 329](https://github.com/*davidsowerby/krail/issues/329) Upgrade to Vaadin 7.3.10*
+*Fix [13](https://github.com/davidsowerby/krail-master/issues/13) Gradle Vaadin plugin updated to 0.9.7*
+
+
+---
+*Fix [12](https://github.com/davidsowerby/krail-master/issues/12) Removed gradle git plugin*
+
+Functionality replaced by q3c-gradle
+
+
+---
+*Fix [15](https://github.com/davidsowerby/krail-master/issues/15) Resolve dependency version conflicts*
+
+There are quite a few of them, all have been resolved to the later version
+
+
+---
+*See [krail 304](https://github.com/davidsowerby/krail/issues/304) Change to logback*
+
+Modified build to use logback
 
 
 ---
