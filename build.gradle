@@ -40,7 +40,7 @@ allprojects {
     apply plugin: 'q3c-release'
 
     sourceCompatibility = '1.8'
-    ext.assertjVersion = '1.7.1'
+    ext.assertjVersion = '2.0.0'
 //    ext.guiceVersion = '4.0-beta5'
     ext.guiceVersion = '3.0'
     ext.vaadinVersion = '7.4.0'
@@ -310,6 +310,7 @@ allprojects {
             force 'org.apache.httpcomponents:httpcore:4.3.2'
             force 'xerces:xercesImpl:2.11.0'
             force 'org.codehaus.groovy:groovy-all:' + groovyVersion
+            force 'org.assertj:assertj-core:' + assertjVersion
 
 
         }
