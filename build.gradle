@@ -148,7 +148,7 @@ allprojects {
         war {
             exclude 'WEB-INF/lib/*'
             archiveName = warName
-            destinationDir file(userHome + "/temp")
+            destinationDir file(userHome + "/docker/webapps")
         }
 
 
