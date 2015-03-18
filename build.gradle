@@ -49,7 +49,7 @@ allprojects {
     ext.vaadinVersion = '7.4.0'
     ext.slf4jVersion = '1.7.0'
     ext.guavaVersion = '18.0'
-    ext.vaadinTestbenchVersion = '4.0.1'
+    ext.vaadinTestbenchVersion = '4.0.2'
     ext.commonsLangVersion = '3.3.2'
     ext.groovyVersion = '2.4.1'
 
@@ -298,7 +298,6 @@ allprojects {
         dependencies {
 
             testCompile project(':krail-bench')
-            testCompile 'com.vaadin:vaadin-testbench:' + vaadinTestbenchVersion
         }
 
     } else {
@@ -359,7 +358,7 @@ allprojects {
             force 'org.apache.httpcomponents:httpclient:4.3.4'
             force 'xml-apis:xml-apis:1.4.01'
             force 'org.objenesis:objenesis:1.2'
-            force 'com.vaadin:vaadin-server:' + vaadinVersion
+            force 'com.vaadin:vaadin-server:' + vaadinVersion // caused by an add-on
             force 'org.json:json:20141113'
             force 'com.jcabi:jcabi-aspects:0.20.1'
             force 'com.jcabi:jcabi-log:0.15.1'
