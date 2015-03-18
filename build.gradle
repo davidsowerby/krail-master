@@ -135,7 +135,7 @@ allprojects {
         ext.dockerContextDir = file(userHome + "/temp/docker")
 
         ext.warName = (project.name.toLowerCase() + '.war')
-        ext.tomcatVersion = '7'
+        ext.tomcatVersion = '8'
 
 
 
