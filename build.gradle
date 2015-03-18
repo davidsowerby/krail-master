@@ -8,7 +8,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-
 import org.apache.tools.ant.taskdefs.condition.Os
 
 buildscript {
@@ -21,6 +20,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.1'
         classpath 'commons-io:commons-io:2.4'
         classpath 'uk.q3c:q3c-gradle:0.6.0'
+        classpath 'com.bmuschko:gradle-docker-plugin:2.0.2'
     }
 }
 
@@ -30,6 +30,8 @@ description = 'Master build project for Krail and Krail libraries'
 
 allprojects {
 
+    group = 'uk.q3c.krail'
+
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
@@ -38,6 +40,7 @@ allprojects {
     apply plugin: 'eclipse-wtp'
     apply plugin: 'idea'
     apply plugin: 'q3c-release'
+    apply plugin: 'com.bmuschko.docker-remote-api'
 
     sourceCompatibility = '1.8'
     ext.assertjVersion = '2.0.0'
@@ -106,7 +109,6 @@ allprojects {
 
 
 
-
     publishing {
         publications {
             mavenStuff(MavenPublication) {
@@ -123,16 +125,6 @@ allprojects {
         }
     }
 
-//Test preparation, but shortened to make it easier on the command line
-    task testPrep << {
-
-    }
-
-
-    testPrep.dependsOn(clean)
-    testPrep.mustRunAfter(clean)
-    test.mustRunAfter(testPrep)
-
     //webapp stuff
 
     if (webapp) {
@@ -140,16 +132,103 @@ allprojects {
         apply plugin: 'war'
 
         ext.userHome = System.getProperty("user.home")
-        ext.tomcatHome = userHome + "/tomcat7_8080"
+        ext.dockerContextDir = file(userHome + "/temp/docker")
 
         ext.warName = (project.name.toLowerCase() + '.war')
+        ext.tomcatVersion = '7'
+
 
 
         war {
             exclude 'WEB-INF/lib/*'
             archiveName = warName
-            destinationDir file(userHome + "/docker/webapps")
+
         }
+
+
+        task clearDockerContext(type: Delete) {
+            doFirst {
+                println 'clear the docker build dir'
+            }
+            delete dockerContextDir
+        }
+
+        task warToContext(type: Copy) {
+            dependsOn clearDockerContext
+            doFirst {
+                println "copy war to docker build dir"
+            }
+            from war
+            into dockerContextDir
+
+        }
+
+        task dockerFileToContext(type: Copy) {
+            dependsOn clearDockerContext
+            doFirst {
+                println "copy and rename Dockerfile"
+            }
+            from project.getProjectDir()
+            into dockerContextDir
+            include("Dockerfile" + tomcatVersion)
+            rename("Dockerfile" + tomcatVersion, "Dockerfile")
+
+        }
+
+//        task buildImage(type: DockerBuildImage) {
+//            dependsOn warToContext
+//            dependsOn dockerFileToContext
+//            inputDir = dockerContextDir
+//            tag = 'tomcat'+tomcatVersion
+//        }
+
+//builds and starts the container
+        task startContainer(type: Exec) {
+            dependsOn warToContext
+            dependsOn dockerFileToContext
+            if (Os.isFamily(Os.FAMILY_UNIX)) {
+                commandLine 'startContainer' + tomcatVersion
+            } else {
+
+                if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    commandLine 'cmd', 'startContainer' + tomcatVersion
+
+                }
+            }
+
+        }
+
+        task stopContainer(type: Exec) {
+
+
+            if (Os.isFamily(Os.FAMILY_UNIX)) {
+                commandLine 'stopContainer'
+            } else {
+
+                if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+                    commandLine 'cmd', 'stopContainer'
+
+                }
+            }
+
+        }
+
+//        task createContainer(type: DockerCreateContainer) {
+//            dependsOn buildImage
+//            targetImageId { buildImage.getImageId() }
+//        }
+//
+//        task startContainer(type: DockerStartContainer) {
+//            dependsOn createContainer
+//            targetContainerId { createContainer.getContainerId() }
+//        }
+
+//        task stopContainer(type: DockerStopContainer) {
+//            targetContainerId { createContainer.getContainerId() }
+//        }
+
+        test.dependsOn(startContainer)
+        test.finalizedBy(stopContainer)
 
 
         vaadin {
@@ -188,11 +267,7 @@ allprojects {
         }
 
 
-        task deployToTomcat(type: Copy) {
-            it.dependsOn("war")
-            from war
-            into "${tomcatHome}/webapps"
-        }
+
 
 
 
@@ -207,24 +282,13 @@ allprojects {
 
 
 
-        task cleanTomcat(type: Delete, dependsOn: stopTomcat) {
-            delete tomcatHome + '/webapps/' + warName, tomcatHome + '/webapps/' + project.name
-        }
 
-        testPrep.doFirst {
 
-        }
 
-        testPrep.dependsOn(waitForTomcat)
-        testPrep.mustRunAfter(waitForTomcat)
         waitForTomcat.dependsOn(startTomcat)
         waitForTomcat.mustRunAfter(startTomcat)
 
-        startTomcat.dependsOn(deployToTomcat)
-        startTomcat.mustRunAfter(deployToTomcat)
 
-        deployToTomcat.dependsOn(stopTomcat)
-        deployToTomcat.mustRunAfter(stopTomcat)
 
         stopTomcat.dependsOn(war)
         stopTomcat.mustRunAfter(war)
@@ -239,15 +303,11 @@ allprojects {
 
     } else {
 
-        testPrep.doFirst {
-            println('Test preparation for non-webapp')
-        }
-
 
     }
 
 
-    group = 'uk.q3c.krail'
+
 
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -311,6 +371,7 @@ allprojects {
             force 'xerces:xercesImpl:2.11.0'
             force 'org.codehaus.groovy:groovy-all:' + groovyVersion
             force 'org.assertj:assertj-core:' + assertjVersion
+            force 'com.fasterxml.jackson.core:jackson-core:2.1.2'
 
 
         }
