@@ -44,8 +44,8 @@ allprojects {
 
     sourceCompatibility = '1.8'
     ext.assertjVersion = '2.0.0'
-//    ext.guiceVersion = '4.0-beta5'
-    ext.guiceVersion = '3.0'
+    ext.guiceVersion = '4.0-beta5'
+//    ext.guiceVersion = '3.0'
     ext.vaadinVersion = '7.4.2'
     ext.slf4jVersion = '1.7.6'
     ext.guavaVersion = '18.0'
@@ -373,6 +373,8 @@ allprojects {
             force 'org.assertj:assertj-core:' + assertjVersion
 //            force 'com.fasterxml.jackson.core:jackson-core:2.1.2'
             force 'com.google.code.gson:gson:' + gsonVersion
+            force 'com.google.inject:guice:' + guiceVersion
+            force 'com.google.inject.extensions:guice-multibindings:' + guiceVersion
 
 
         }
