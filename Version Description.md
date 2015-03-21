@@ -1,1 +1,1 @@
-All version conflicts in the build are resolved, some other dependency versions updated
+This version introduces Docker containers for testing, and enables testing on Tomcat 8
