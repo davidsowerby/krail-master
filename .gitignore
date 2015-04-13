@@ -1,19 +1,17 @@
-/.gradle
-/.idea
-/.settings
-/bin
-/build
-/gradle
-/logs
+.idea
+.settings
+bin
+build
+gradle
+.gradle
 
-/.krail-master.iml
-/.krail-master.iws
-/.krail-master.ipr
+krail-master.iml
+krail-master.iws
+krail-master.ipr
 
 build.gradle~
 git.ignore~
 
-/.classpath
-/.project
-/.gradle
+.classpath
+.project
 /error-screenshots
