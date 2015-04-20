@@ -1,1 +1,1 @@
-This version introduces Docker containers for testing, and enables testing on Tomcat 8
+Upgrade to Vaadin 7.4.4
