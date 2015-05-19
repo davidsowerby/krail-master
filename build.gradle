@@ -82,7 +82,7 @@ allprojects {
         key = bintrayKey
 
         publications = ['mavenStuff'] //When uploading Maven-based publication files
-        dryRun = false  //project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
+        dryRun = true  //project.ext.bintrayDryRun //Whether to run this as dry-run, without deploying
         publish = true //If version should be auto published after an upload
         pkg {
             repo = 'maven'
