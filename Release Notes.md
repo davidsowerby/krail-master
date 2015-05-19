@@ -1,6 +1,6 @@
-### Release Notes for krail-master 0.6.1
+### Release Notes for krail-master 0.6.2
 
-Upgrade to Vaadin 7.4.4
+Upgrade to Vaadin 7.4.6, Guice 4.0.  Minor change to build file for bintrayUpload.  q3c-gradle updated
 
 #### Change log
 
@@ -8,51 +8,47 @@ Upgrade to Vaadin 7.4.4
 
 #### Dependency changes
 
-   compile dependency version changed to: krail:0.9.2
-   compile dependency version changed to: krail-testUtil:1.0.11
-   compile dependency version changed to: q3c-testUtil:0.7.8
+   compile dependency version changed to: krail:0.9.3
+   compile dependency version changed to: krail-testUtil:1.0.12
+   compile dependency version changed to: q3c-testUtil:0.7.9
 
 #### Detail
 
-*Updated version information*
+*Updated version info*
 
 
 ---
-*Upgrade to Vaadin 7.4.4*
+*Vaadin 7.4.6*
 
 
 ---
-*Upgrade to Vaadin 7.4.3*
+*Guice 4.0*
 
 
 ---
-*See [20](https://github.com/davidsowerby/krail-master/issues/20) Orient sub-project added, but not active*
-
-Changes made to settings to include krail-orient (but commented out) and version conflicts for OrientDb resolved pending their use
+*Vaadin 7.4.5*
 
 
 ---
-*Merge branch 'krail317' into develop*
+*Bintray upload changes*
+
+dryRun=true by default (set by krail-master), unless overridden by individual projects
 
 
 ---
-*Released, see tag for version*
+*Updates dependency versions*
+
+q3c-gradle and bintray plugin.  This should enable further build automation
 
 
 ---
-*Release notes and version.properties generated*
+*Removed 'cpas' project, should not be in the master build*
 
 
 ---
-*Version update information*
+*See [krail 372](https://github.com/davidsowerby/krail/issues/372) Change validation API version*
 
-
----
-*Merge branch 'develop' into krail317*
-
-
----
-*Guice 4 - times out on bootstrap script - but not always*
+Reverted to javax.validation API to 1.0.0 GA.  The later version of 1.1.0 is incompatible with GWT
 
 
 ---
