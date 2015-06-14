@@ -1,1 +1,1 @@
-Upgrade to Vaadin 7.4.6, Guice 4.0.  Minor change to build file for bintrayUpload.  q3c-gradle updated
+Upgrade to Vaadin 7.4.8
