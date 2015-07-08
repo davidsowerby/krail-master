@@ -392,8 +392,7 @@ allprojects {
 
             // GWT requires an old version of the validation API.  Changing to a newer version breaks widgetset compile but throws no errors
             force 'javax.validation:validation-api:1.0.0.GA'
-
-
+            force 'junit:junit:4.12'
         }
     }
 
@@ -427,6 +426,7 @@ allprojects {
         testCompile 'junit:junit:4.11'
         testCompile 'org.assertj:assertj-core:' + assertjVersion
         testCompile 'org.assertj:assertj-guava:1.3.1'
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 
     }
 
