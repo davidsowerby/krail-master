@@ -2,7 +2,7 @@
 .settings
 bin
 build
-gradle
+
 .gradle
 
 krail-master.iml
