@@ -1,1 +1,1 @@
-Upgrade to Vaadin 7.4.8
+Upgrade to Vaadin 7.5.3, and the Vaadin Gradle plugin
