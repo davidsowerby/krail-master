@@ -351,8 +351,8 @@ allprojects {
             force 'com.mycila:mycila-log:2.12'
             force 'org.apache.commons:commons-lang3:' + commonsLangVersion
             force 'org.javassist:javassist:3.18.1-GA'
-//            force 'org.seleniumhq.selenium:selenium-java:2.43.1'
-//            force 'org.seleniumhq.selenium:selenium-remote-driver:2.43.1'
+            force 'org.seleniumhq.selenium:selenium-java:2.45.0'
+            force 'org.seleniumhq.selenium:selenium-remote-driver:2.45.0'
             force 'org.slf4j:slf4j-api:' + slf4jVersion
 //            force 'com.vaadin:vaadin-testbench-core:' + vaadinTestbenchVersion
             force 'commons-logging:commons-logging:1.1.3'
