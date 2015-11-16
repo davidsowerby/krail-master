@@ -45,7 +45,7 @@ allprojects {
     sourceCompatibility = '1.8'
     ext.assertjVersion = '2.0.0'
     ext.guiceVersion = '4.0'
-    ext.vaadinVersion = '7.5.8'
+    ext.vaadinVersion = '7.5.9'
     ext.slf4jVersion = '1.7.6'
     ext.guavaVersion = '18.0'
     ext.vaadinTestbenchVersion = '4.0.2'
