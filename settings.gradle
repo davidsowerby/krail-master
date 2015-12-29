@@ -13,7 +13,6 @@
 
 include 'krail'
 include 'krail-jpa'
-include 'krail-demo'
 include 'krail-testApp'
 include 'krail-testUtil'
 include 'krail-quartz'
