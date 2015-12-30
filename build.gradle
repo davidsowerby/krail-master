@@ -129,7 +129,7 @@ allprojects {
     //webapp stuff
 
     if (webapp) {
-        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.10.1'
+        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.10.4'
         apply plugin: 'war'
 
         ext.userHome = System.getProperty("user.home")
