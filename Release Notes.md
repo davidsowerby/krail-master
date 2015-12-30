@@ -1,70 +1,70 @@
-### Release Notes for krail-master 0.7.0
+### Release Notes for krail-master 0.7.1
 
-Upgrade to Vaadin 7.5.3, and the Vaadin Gradle plugin
+Upgrade to Vaadin 7.5.10, and the Vaadin Gradle plugin to 0.10.4
 
 #### Change log
 
--   [27](https://github.com/davidsowerby/krail-master/issues/27): Vaadin plugin 1.0
--   [28](https://github.com/davidsowerby/krail-master/issues/28): Vaadin plugin 0.10.1
--   [449](https://github.com/davidsowerby/krail-master/issues/449): Invalid issue number or uri.   https://api.github.com/repos/davidsowerby/krail-master/issues/449
+-   [22](https://github.com/davidsowerby/krail-master/issues/22): gradle-bintray-plugin 1.2
+-   [29](https://github.com/davidsowerby/krail-master/issues/29): gradle-vaadin-plugin 0.10.2
+-   [31](https://github.com/davidsowerby/krail-master/issues/31): gradle-vaadin-plugin 0.10.3
 
 
 #### Dependency changes
 
-   compile dependency version changed to: krail:0.9.6
+   compile dependency version changed to: krail:0.9.7
+   compile dependency version changed to: krail-testUtil:1.0.16
    compile dependency version changed to: q3c-testUtil:0.7.11
-   compile dependency version changed to: krail-testUtil:1.0.15
 
 #### Detail
 
-*Pre-release - update version descriptions and version properties*
+*Fix [22](https://github.com/davidsowerby/krail-master/issues/22) gradle-bintray plugin to 1.5*
+
+q3c-gradle to 0.7.2
 
 
 ---
-*Vaadin 7.5.3*
+*Fix [31](https://github.com/davidsowerby/krail-master/issues/31) Updated gradle-vaadin plugin to 0.10.4*
 
-see [krail 455](https://github.com/davidsowerby/krail/issues/455)
-
-
----
-*Fix [449](https://github.com/davidsowerby/krail-master/issues/449) Vaadin 7.5.2*
+Also Fix [29](https://github.com/davidsowerby/krail-master/issues/29) (for earlier version)
+Updated version and version description
 
 
 ---
-*Fix [28](https://github.com/davidsowerby/krail-master/issues/28) Update gradle-vaddin plugin to 0.10.1*
+*Demo removed from the build*
 
 
 ---
-*Fix [27](https://github.com/davidsowerby/krail-master/issues/27) Upgrade Vaadin Plugin*
-
-Also required upgrade of Gradle to 2.5
+[krail 482](https://github.com/*davidsowerby/krail/issues/482) Vaadin 7.5.10*
 
 
 ---
-*Fix [krail 380](https://github.com/davidsowerby/krail/issues/380) Update vaadin-gradle plugin*
+*Vaadin 7.5.9*
 
 
 ---
-[krail 439](https://github.com/*davidsowerby/krail/issues/439) Vaadin 7.5.1*
+*See [krail 477](https://github.com/davidsowerby/krail/issues/477) Vaadin 7.5.8*
 
 
 ---
-*See [krail-jpa 12](https://github.com/davidsowerby/krail-jpa/issues/12) spock-guice added*
+*See [krail 474](https://github.com/davidsowerby/krail/issues/474) Vaadin 7.5.7*
+
+Upgrade to Vaadin 7.5.7
 
 
 ---
-*OptionView shows active and selected options sources*
-
-Renaming to DefaultOptionSource
-OptionKey is no longer immutable, but there is a setter only for the default value.  This is useful for setting a common default for groups of options (see ```SourcePanel``` for an example)
+*Merge branch 'fix-krail475' into develop*
 
 
 ---
-[krail 433](https://github.com/*davidsowerby/krail/issues/433) Vaadin 7.5.0*
+*Fix [krail 475](https://github.com/davidsowerby/krail/issues/475) Later version of Selenium to fix issue with Firefox*
+
+Changes to tests:
+- Adjusted timeout for navigating to URL
+- Allowed additional time in LocaleTest before switching Locale (test was failing intermittently)
 
 
 ---
-*Upgrade to q3c-gradle 0.7.1*
+*Released at version 0.7.0*
 
 
 ---
