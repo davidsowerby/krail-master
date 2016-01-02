@@ -43,7 +43,7 @@ allprojects {
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     sourceCompatibility = '1.8'
-    ext.assertjVersion = '2.0.0'
+    ext.assertjVersion = '3.2.0'
     ext.guiceVersion = '4.0'
     ext.vaadinVersion = '7.5.10'
     ext.slf4jVersion = '1.7.6'
