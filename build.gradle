@@ -393,6 +393,7 @@ allprojects {
             // GWT requires an old version of the validation API.  Changing to a newer version breaks widgetset compile but throws no errors
             force 'javax.validation:validation-api:1.0.0.GA'
             force 'junit:junit:4.12'
+            force 'com.google.code.findbugs:annotations:3.0.0'
         }
     }
 
