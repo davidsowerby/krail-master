@@ -45,7 +45,7 @@ allprojects {
     apply plugin: 'com.bmuschko.docker-remote-api'
 
     sourceCompatibility = '1.8'
-    ext.assertjVersion = '3.2.0'
+    ext.assertjVersion = '3.3.0'
     ext.guiceVersion = '4.0'
     ext.vaadinVersion = '7.6.1'
     ext.slf4jVersion = '1.7.6'
@@ -131,7 +131,7 @@ allprojects {
     //webapp stuff
 
     if (webapp) {
-        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.10.4'
+        apply from: 'http://plugins.jasoft.fi/vaadin-groovy.plugin?version=0.10.6'
         apply plugin: 'war'
 
         ext.userHome = System.getProperty("user.home")
