@@ -438,7 +438,6 @@ allprojects {
 }
 
 dependencies {
-    compile project(':krail-testUtil')
     compile project(':q3c-testUtil')
 }
 
