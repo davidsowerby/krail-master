@@ -32,7 +32,7 @@ rootProject.children.each { project ->
     project.projectDir = new File(projectDirName)
 
 // for example, makes it krail.gradle
-    project.buildFileName = "${fileBaseName}.gradle"
+    project.buildFileName = "build.gradle"
 
 //make sure it exists
     assert project.projectDir.isDirectory()
