@@ -20,7 +20,7 @@ include 'krail-testApp'
 include 'krail-quartz'
 include 'krail-bench'
 //include 'krail-orient'
-include 'q3c-testUtil'
+//include 'q3c-testUtil'
 //include 'cpas'
 
 rootProject.name = 'krail-master'

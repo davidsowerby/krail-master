@@ -110,6 +110,9 @@ allprojects {
         }
     }
 
+    task wrapper(type: Wrapper) {
+        gradleVersion = '2.10'
+    }
 
 
     publishing {
@@ -438,7 +441,7 @@ allprojects {
 }
 
 dependencies {
-    compile project(':q3c-testUtil')
+
 }
 
 task verifyRelease(type: uk.q3c.gradle.VerificationTask) {
