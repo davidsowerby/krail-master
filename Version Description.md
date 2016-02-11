@@ -1,1 +1,1 @@
-Upgrade to Vaadin 7.5.10, and the Vaadin Gradle plugin to 0.10.4
+Upgrade to Vaadin 7.6.2, and some other version updates.  q3c-testUtil moved to separate project.  Build files all now named 'build.gradle' 
